@@ -231,7 +231,8 @@ connect_srcpad_to_encoder (GstPad * srcpad, GstPad * sinkpad)
       caps = gst_caps_ref (data->caps);
       transcode = !gst_caps_can_intersect (caps, current_caps);
       if (transcode) {
-        GST_DEBUG_OBJECT (srcpad, "Cannot intersect caps for source pad, transcode: 1");
+        GST_DEBUG_OBJECT (srcpad,
+            "Cannot intersect caps for source pad, transcode: 1");
       }
       break;
     default:

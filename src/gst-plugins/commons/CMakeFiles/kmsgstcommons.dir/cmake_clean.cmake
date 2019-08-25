@@ -1,0 +1,41 @@
+file(REMOVE_RECURSE
+  "kms-core-enumtypes.c"
+  "kms-core-marshal.c"
+  "kms-core-enumtypes.h"
+  "kms-core-marshal.h"
+  "CMakeFiles/kmsgstcommons.dir/kmsrtcp.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsremb.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmssdpsession.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsbasertpsession.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsirtpsessionmanager.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsirtpconnection.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsbasertpendpoint.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsbasesdpendpoint.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmselement.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsloop.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsrecordingprofile.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmshubport.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsbasehub.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsuriendpoint.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsbufferlacentymeta.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsserializablemeta.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsstats.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmstreebin.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsdectreebin.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsenctreebin.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsparsetreebin.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsrtppaytreebin.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmslist.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kmsrtpsynchronizer.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kms-core-enumtypes.c.o"
+  "CMakeFiles/kmsgstcommons.dir/kms-core-marshal.c.o"
+  "libkmsgstcommons.pdb"
+  "libkmsgstcommons.so.7.0.0~11.gd5281780"
+  "libkmsgstcommons.so"
+  "libkmsgstcommons.so.7"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/kmsgstcommons.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

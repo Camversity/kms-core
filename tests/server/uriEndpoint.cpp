@@ -41,11 +41,14 @@ struct GF {
 class UriEndpointFactory : public Factory
 {
 public:
-  std::string getName () const override { return "UriEndpointFactory"; }
+  std::string getName () const override
+  {
+    return "UriEndpointFactory";
+  }
 
 protected:
   MediaObjectImpl *createObjectPointer (const boost::property_tree::ptree &conf,
-      const Json::Value &params) const override
+                                        const Json::Value &params) const override
   {
     std::string mediaPipelineId = params["mediaPipeline"].asString ();
     std::string uri = params["uri"].asString ();
@@ -61,7 +64,7 @@ BOOST_GLOBAL_FIXTURE (GF);
 
 GF::GF()
 {
-  gst_init(nullptr, nullptr);
+  gst_init (nullptr, nullptr);
   moduleManager.loadModulesFromDirectories ("../../src/server");
 }
 

@@ -1,0 +1,40 @@
+file(REMOVE_RECURSE
+  "kms-sdp-agent-enumtypes.c"
+  "kms-sdp-agent-marshal.c"
+  "kms-sdp-agent-enumtypes.h"
+  "kms-sdp-agent-marshal.h"
+  "CMakeFiles/kmssdpagent.dir/kmssdpagentcommon.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpagent.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprtpmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprtpavpfmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprtpavpmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprtpsavpmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprtpsavpfmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpsctpmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmsisdppayloadmanager.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdppayloadmanager.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmsisdpmediaextension.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmsisdpsessionextension.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpsdesext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpbasegroup.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpbundlegroup.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpmidext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpgroupmanager.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdprejectmediahandler.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpconnectionext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpulpfecext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpredundantext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kmssdpmediadirext.c.o"
+  "CMakeFiles/kmssdpagent.dir/kms-sdp-agent-enumtypes.c.o"
+  "CMakeFiles/kmssdpagent.dir/kms-sdp-agent-marshal.c.o"
+  "libkmssdpagent.pdb"
+  "libkmssdpagent.so.7.0.0~11.gd5281780"
+  "libkmssdpagent.so"
+  "libkmssdpagent.so.7"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/kmssdpagent.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

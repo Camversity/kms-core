@@ -531,10 +531,10 @@ GST_START_TEST (input_caps_reconfiguration)
   GstElement *pipeline =
       gst_parse_launch
       ("videotestsrc is-live=true"
-       "  ! capsfilter name=input_caps caps=video/x-raw,width=800,height=600"
-       "  ! agnosticbin ! video/x-vp8"
-       "  ! agnosticbin ! video/x-raw"
-       "  ! fakesink sync=false async=false signal-handoffs=true name=fakesink",
+      "  ! capsfilter name=input_caps caps=video/x-raw,width=800,height=600"
+      "  ! agnosticbin ! video/x-vp8"
+      "  ! agnosticbin ! video/x-raw"
+      "  ! fakesink sync=false async=false signal-handoffs=true name=fakesink",
       NULL);
 
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
@@ -970,10 +970,10 @@ GST_START_TEST (h264_encoding_odd_dimension)
   GstElement *pipeline =
       gst_parse_launch
       ("videotestsrc is-live=true num-buffers=30"
-       "  ! video/x-raw,format=(string)I420,width=(int)319,height=(int)239,"
-       "    pixel-aspect-ratio=(fraction)1/1,interlace-mode=(string)progressive,"
-       "    colorimetry=(string)bt601,framerate=(fraction)14/1"
-       "  ! agnosticbin ! video/x-h264 ! fakesink async=true",
+      "  ! video/x-raw,format=(string)I420,width=(int)319,height=(int)239,"
+      "    pixel-aspect-ratio=(fraction)1/1,interlace-mode=(string)progressive,"
+      "    colorimetry=(string)bt601,framerate=(fraction)14/1"
+      "  ! agnosticbin ! video/x-h264 ! fakesink async=true",
       NULL);
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 
@@ -1034,6 +1034,7 @@ fakesink_on_handoff (GstElement * fakesink, GstBuffer * buf, GstPad * pad,
     gpointer data)
 {
   static guint count = 0;
+
   ++count;
 
   if (count > 20) {
@@ -1042,19 +1043,21 @@ fakesink_on_handoff (GstElement * fakesink, GstBuffer * buf, GstPad * pad,
     // Change dimension
     {
       GstElement *pipeline = GST_ELEMENT_PARENT (fakesink);
-      GstCaps *new_caps = gst_caps_from_string (
-            "video/x-raw,format=(string)I420,width=(int)640,height=(int)480");
+      GstCaps *new_caps =
+          gst_caps_from_string
+          ("video/x-raw,format=(string)I420,width=(int)640,height=(int)480");
       GstElement *capsfilter;
       GstElement *vp8caps;
 
       vp8caps = gst_bin_get_by_name (GST_BIN (pipeline), "vp8caps");
       if (vp8caps) {
         GstPad *sink = gst_element_get_static_pad (vp8caps, "sink");
-        gst_pad_add_probe (sink, GST_PAD_PROBE_TYPE_EVENT_BOTH, vp8_event_probe, NULL, NULL);
+
+        gst_pad_add_probe (sink, GST_PAD_PROBE_TYPE_EVENT_BOTH, vp8_event_probe,
+            NULL, NULL);
         g_object_unref (sink);
         g_object_unref (vp8caps);
       }
-
       // This should trigger a GST_EVENT_CAPS on the fakesink element,
       // which gets catched by sink_probe() and finishes the test.
       // If that doesn't happen, then the test will timeout and fail.
@@ -1076,12 +1079,12 @@ GST_START_TEST (video_dimension_change)
   GstElement *pipeline =
       gst_parse_launch
       ("videotestsrc is-live=true"
-       "  ! capsfilter name=capsfilter caps=video/x-raw,format=(string)I420,"
-       "    width=(int)320,height=(int)240"
-       "  ! agnosticbin ! capsfilter name=vp8caps caps=video/x-vp8"
-       "  ! agnosticbin"
-       "  ! fakesink name=sink async=true sync=true signal-handoffs=true",
-       NULL);
+      "  ! capsfilter name=capsfilter caps=video/x-raw,format=(string)I420,"
+      "    width=(int)320,height=(int)240"
+      "  ! agnosticbin ! capsfilter name=vp8caps caps=video/x-vp8"
+      "  ! agnosticbin"
+      "  ! fakesink name=sink async=true sync=true signal-handoffs=true",
+      NULL);
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 
   loop = g_main_loop_new (NULL, TRUE);
@@ -1125,11 +1128,11 @@ GST_START_TEST (video_dimension_change_force_output)
   GstElement *pipeline =
       gst_parse_launch
       ("videotestsrc is-live=true"
-       "  ! capsfilter name=capsfilter caps=video/x-raw,format=(string)I420,"
-       "    width=(int)320,height=(int)240"
-       "  ! agnosticbin ! capsfilter name=vp8caps caps=video/x-vp8"
-       "  ! agnosticbin ! video/x-vp8,width=(int)320,height=(int)240"
-       "  ! fakesink name=sink async=true sync=true signal-handoffs=true",
+      "  ! capsfilter name=capsfilter caps=video/x-raw,format=(string)I420,"
+      "    width=(int)320,height=(int)240"
+      "  ! agnosticbin ! capsfilter name=vp8caps caps=video/x-vp8"
+      "  ! agnosticbin ! video/x-vp8,width=(int)320,height=(int)240"
+      "  ! fakesink name=sink async=true sync=true signal-handoffs=true",
       NULL);
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 
@@ -1174,9 +1177,9 @@ GST_START_TEST (test_raw_to_rtp)
   GstElement *pipeline =
       gst_parse_launch
       ("videotestsrc is-live=true"
-       "  ! agnosticbin ! application/x-rtp,media=(string)video,"
-       "    encoding-name=(string)VP8,clock-rate=(int)90000"
-       "  ! fakesink async=true sync=true name=sink signal-handoffs=true",
+      "  ! agnosticbin ! application/x-rtp,media=(string)video,"
+      "    encoding-name=(string)VP8,clock-rate=(int)90000"
+      "  ! fakesink async=true sync=true name=sink signal-handoffs=true",
       NULL);
   GstBus *bus = gst_pipeline_get_bus (GST_PIPELINE (pipeline));
 
@@ -1210,8 +1213,7 @@ GST_END_TEST;
 GST_START_TEST (test_codec_to_rtp)
 {
   GstElement *fakesink;
-  GstElement *pipeline = gst_parse_launch (
-      "videotestsrc is-live=true"
+  GstElement *pipeline = gst_parse_launch ("videotestsrc is-live=true"
       "  ! agnosticbin ! video/x-vp8"
       "  ! agnosticbin ! application/x-rtp,media=(string)video,"
       "                  encoding-name=(string)VP8,clock-rate=(int)90000"

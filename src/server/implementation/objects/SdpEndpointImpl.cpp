@@ -58,7 +58,7 @@ str_to_sdp (const std::string &sdpStr)
     throw KurentoException (SDP_PARSE_ERROR, "Error parsing SDP");
   }
 
-  if (gst_sdp_message_get_version(sdp) == nullptr) {
+  if (gst_sdp_message_get_version (sdp) == nullptr) {
     gst_sdp_message_free (sdp);
     throw KurentoException (SDP_PARSE_ERROR, "Invalid SDP");
   }
@@ -131,7 +131,7 @@ SdpEndpointImpl::SdpEndpointImpl (const boost::property_tree::ptree &config,
       (&acodec_list, PARAM_AUDIO_CODECS);
 
   for (std::shared_ptr<CodecConfiguration> conf : acodec_list) {
-    if (!conf->getName().empty()) {
+    if (!conf->getName().empty() ) {
       append_codec_to_array (audio_codecs, conf->getName().c_str() );
     }
   }
@@ -141,7 +141,7 @@ SdpEndpointImpl::SdpEndpointImpl (const boost::property_tree::ptree &config,
       (&vcodec_list, PARAM_VIDEO_CODECS);
 
   for (std::shared_ptr<CodecConfiguration> conf : vcodec_list) {
-    if (!conf->getName().empty()) {
+    if (!conf->getName().empty() ) {
       append_codec_to_array (video_codecs, conf->getName().c_str() );
     }
   }

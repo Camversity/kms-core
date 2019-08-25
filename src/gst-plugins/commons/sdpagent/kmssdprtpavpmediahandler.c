@@ -780,7 +780,6 @@ kms_sdp_rtp_avp_media_handler_init_new_offer (KmsSdpMediaHandler * handler,
     ret = FALSE;
     goto end;
   }
-
   // RFC 5763 says:
   // > The endpoint that is the offerer MUST use the setup attribute
   // > value of setup:actpass

@@ -68,7 +68,8 @@ kms_remb_base_update_stats (KmsRembBase * self, guint ssrc, guint bitrate)
 
   if (g_hash_table_contains (self->remb_stats, GUINT_TO_POINTER (ssrc))) {
     value =
-        (guint *) g_hash_table_lookup (self->remb_stats, GUINT_TO_POINTER (ssrc));
+        (guint *) g_hash_table_lookup (self->remb_stats,
+        GUINT_TO_POINTER (ssrc));
   } else {
     value = g_slice_new0 (guint);
     g_hash_table_insert (self->remb_stats, GUINT_TO_POINTER (ssrc), value);
@@ -83,7 +84,7 @@ kms_remb_base_update_stats (KmsRembBase * self, guint ssrc, guint bitrate)
 
 typedef struct _KmsRlRemoteSession
 {
-  GObject *rtpsess; // RTPSession* from GstRtpBin->GstRtpSession
+  GObject *rtpsess;             // RTPSession* from GstRtpBin->GstRtpSession
   guint ssrc;
 
   guint64 last_octets_received;
@@ -129,15 +130,13 @@ kms_rl_remote_session_get_sessions_info (KmsRlRemoteSession * self,
   guint i;
 
   if (self->ssrc == 0) {
-    GST_TRACE_OBJECT (self->rtpsess,
-        "RTP Session lacks SSRC provided by SDP");
+    GST_TRACE_OBJECT (self->rtpsess, "RTP Session lacks SSRC provided by SDP");
     return;
   }
 
   g_object_get (self->rtpsess, "sources", &arr, NULL);
   if (!arr) {
-    GST_ERROR_OBJECT (self->rtpsess,
-        "RTP Session lacks any RTPSource");
+    GST_ERROR_OBJECT (self->rtpsess, "RTP Session lacks any RTPSource");
     return;
   }
 
@@ -154,20 +153,18 @@ kms_rl_remote_session_get_sessions_info (KmsRlRemoteSession * self,
     gboolean is_sender;
 
     // FIXME 'g_value_array_get_nth' is deprecated: Use 'GArray' instead
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     // RTPSource*
     val = g_value_array_get_nth (arr, i);
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 
     rtpsource = g_value_get_object (val);
 
     // Property RTPSource::ssrc, doc: GStreamer/rtpsource.c
     g_object_get (rtpsource,
         "ssrc", &ssrc,
-        "is-validated", &is_validated,
-        "is-sender", &is_sender,
-        NULL);
+        "is-validated", &is_validated, "is-sender", &is_sender, NULL);
 
     // Each session has a minimum of 2 SSRCs: the sender's and the receiver's;
     // here we're looking for stats from the sender which had its SSRC registered
@@ -185,31 +182,36 @@ kms_rl_remote_session_get_sessions_info (KmsRlRemoteSession * self,
       continue;
     }
 
-    GST_LOG_OBJECT (self->rtpsess,
-        "SSRC match! RTPSource: %u", ssrc);
+    GST_LOG_OBJECT (self->rtpsess, "SSRC match! RTPSource: %u", ssrc);
 
     // Property RTPSource::stats, doc: GStreamer/rtpsource.c
     GstStructure *s;
+
     g_object_get (rtpsource, "stats", &s, NULL);
     GST_TRACE_OBJECT (rtpsource, "stats: %" GST_PTR_FORMAT, s);
 
     guint64 bitrate = 0, octets_received = 0, packets_received = 0;
     gint packets_lost = 0;
     guint fraction_lost = 0;
+
     if (!gst_structure_get_uint64 (s, "bitrate", &bitrate)) {
-      GST_ERROR_OBJECT (rtpsource,  "RTPSource stats lack property 'bitrate'");
+      GST_ERROR_OBJECT (rtpsource, "RTPSource stats lack property 'bitrate'");
     }
     if (!gst_structure_get_uint64 (s, "octets-received", &octets_received)) {
-      GST_ERROR_OBJECT (rtpsource, "RTPSource stats lack property 'octets-received'");
+      GST_ERROR_OBJECT (rtpsource,
+          "RTPSource stats lack property 'octets-received'");
     }
     if (!gst_structure_get_uint64 (s, "packets-received", &packets_received)) {
-      GST_ERROR_OBJECT (rtpsource, "RTPSource stats lack property 'packets-received'");
+      GST_ERROR_OBJECT (rtpsource,
+          "RTPSource stats lack property 'packets-received'");
     }
-    if (!gst_structure_get_int    (s, "packets-lost", &packets_lost)) {
-      GST_ERROR_OBJECT (rtpsource, "RTPSource stats lack property 'packets-lost'");
+    if (!gst_structure_get_int (s, "packets-lost", &packets_lost)) {
+      GST_ERROR_OBJECT (rtpsource,
+          "RTPSource stats lack property 'packets-lost'");
     }
-    if (!gst_structure_get_uint   (s, "sent-rb-fractionlost", &fraction_lost)) {
-      GST_ERROR_OBJECT (rtpsource, "RTPSource stats lack property 'sent-rb-fractionlost'");
+    if (!gst_structure_get_uint (s, "sent-rb-fractionlost", &fraction_lost)) {
+      GST_ERROR_OBJECT (rtpsource,
+          "RTPSource stats lack property 'sent-rb-fractionlost'");
     }
     gst_structure_free (s);
 
@@ -218,14 +220,13 @@ kms_rl_remote_session_get_sessions_info (KmsRlRemoteSession * self,
     // To account for this case, our own counters must be also reset.
     if (self->last_packets_received > packets_received) {
       GST_INFO_OBJECT (self->rtpsess,
-        "RTP stats restarted due to long gap in RTP sequence numbers");
+          "RTP stats restarted due to long gap in RTP sequence numbers");
       self->last_octets_received = 0;
       self->last_packets_received = 0;
       self->last_packets_received_expected = 0;
     }
 
-    const guint64 packets_received_expected =
-        packets_received + packets_lost;
+    const guint64 packets_received_expected = packets_received + packets_lost;
 
     const guint64 packets_received_expected_interval =
         packets_received_expected - self->last_packets_received_expected;
@@ -260,10 +261,10 @@ kms_rl_remote_session_get_sessions_info (KmsRlRemoteSession * self,
   }
 
   // FIXME 'g_value_array_free' is deprecated: Use 'GArray' instead
-  #pragma GCC diagnostic push
-  #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
   g_value_array_free (arr);
-  #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 }
 
 static gboolean
@@ -271,21 +272,20 @@ kms_remb_local_get_video_recv_info (KmsRembLocal * self,
     guint64 * bitrate, guint * fraction_lost, guint64 * packets_rcv_interval)
 {
   GstClockTime current_time;
-  GetRtpSessionsInfo data = {0};
+  GetRtpSessionsInfo data = { 0 };
 
   if (!KMS_REMB_BASE (self)->rtpsess) {
     GST_WARNING_OBJECT (self, "KmsRembLocal: No session object");
     return FALSE;
   }
-
   //J REVIEW - Is it really possible to have more than 1 session in self->remote_sessions?
   const guint sessions_count = g_slist_length (self->remote_sessions);
+
   GST_LOG_OBJECT (KMS_REMB_BASE (self)->rtpsess,
       "KmsRembLocal: Get stats from %u remote session(s)", sessions_count);
 
   g_slist_foreach (self->remote_sessions,
-                   (GFunc) kms_rl_remote_session_get_sessions_info,
-                   &data);
+      (GFunc) kms_rl_remote_session_get_sessions_info, &data);
 
   if (data.count == 0) {
     GST_LOG_OBJECT (KMS_REMB_BASE (self)->rtpsess,
@@ -319,8 +319,7 @@ kms_remb_local_get_video_recv_info (KmsRembLocal * self,
     GST_TRACE_OBJECT (KMS_REMB_BASE (self)->rtpsess,
         "Time elapsed: %" G_GUINT64_FORMAT
         ", bytes handled: %" G_GUINT64_FORMAT
-        ", bitrate: %" G_GUINT64_FORMAT,
-        elapsed, bytes_handled, *bitrate);
+        ", bitrate: %" G_GUINT64_FORMAT, elapsed, bytes_handled, *bitrate);
   }
   self->last_time = current_time;
 
@@ -336,7 +335,7 @@ kms_remb_local_update (KmsRembLocal * self)
   guint fraction_lost, packets_rcv_interval_top;
 
   if (!kms_remb_local_get_video_recv_info (self,
-      &bitrate, &fraction_lost, &packets_rcv_interval)) {
+          &bitrate, &fraction_lost, &packets_rcv_interval)) {
     return FALSE;
   }
 
@@ -393,15 +392,15 @@ kms_remb_local_update (KmsRembLocal * self)
 
     remb_base = MAX (self->remb, self->avg_br);
     self->threshold = remb_base * self->threshold_factor;
-    lineal_factor_new = (remb_base - self->threshold) / self->lineal_factor_grade;
+    lineal_factor_new =
+        (remb_base - self->threshold) / self->lineal_factor_grade;
     self->lineal_factor = MAX (self->lineal_factor_min, lineal_factor_new);
 
     if (self->fraction_lost_record < self->up_losses) {
       GST_TRACE_OBJECT (KMS_REMB_BASE (self)->rtpsess, "B) Assumable losses");
 
       self->remb = MIN (self->remb, self->max_br);
-    }
-    else {
+    } else {
       GST_TRACE_OBJECT (KMS_REMB_BASE (self)->rtpsess, "C) Too many losses");
 
       self->remb = remb_base * self->decrement_factor;
@@ -450,13 +449,13 @@ add_ssrcs (KmsRlRemoteSession * rlrs, AddSsrcsData * data)
 
 // Signal "RTPSession::on-sending-rtcp" doc: GStreamer/rtpsession.c
 static gboolean
-kms_remb_local_on_sending_rtcp (GObject *rtpsession,
-    GstBuffer *buffer, gboolean is_early, KmsRembLocal *self)
+kms_remb_local_on_sending_rtcp (GObject * rtpsession,
+    GstBuffer * buffer, gboolean is_early, KmsRembLocal * self)
 {
   gboolean ret = FALSE;
   GstClockTime current_time, elapsed;
   KmsRTCPPSFBAFBREMBPacket remb_packet;
-  GstRTCPBuffer rtcp = {0,};
+  GstRTCPBuffer rtcp = { 0, };
   GstRTCPPacket packet;
   guint packet_ssrc;
   AddSsrcsData data;
@@ -466,7 +465,8 @@ kms_remb_local_on_sending_rtcp (GObject *rtpsession,
   current_time = kms_utils_get_time_nsecs ();
   elapsed = current_time - self->last_sent_time;
   if (self->last_sent_time != 0 && (elapsed < REMB_MAX_INTERVAL * GST_MSECOND)) {
-    GST_LOG_OBJECT (rtpsession, "Not sending: Interval < %u ms", REMB_MAX_INTERVAL);
+    GST_LOG_OBJECT (rtpsession, "Not sending: Interval < %u ms",
+        REMB_MAX_INTERVAL);
     return ret;
   }
 
@@ -479,7 +479,6 @@ kms_remb_local_on_sending_rtcp (GObject *rtpsession,
     GST_WARNING_OBJECT (rtpsession, "Cannot add RTCP packet");
     goto end;
   }
-
   // Update the REMB bitrate estimations
   if (!kms_remb_local_update (self)) {
     GST_LOG_OBJECT (rtpsession, "Not sending: Stats not updated");
@@ -510,8 +509,7 @@ kms_remb_local_on_sending_rtcp (GObject *rtpsession,
     GST_DEBUG_OBJECT (rtpsession,
         "Send REMB: New local bitrate estimation: %u", new_bitrate);
     self->remb_sent = new_bitrate;
-  }
-  else {
+  } else {
     GST_DEBUG_OBJECT (rtpsession,
         "Send REMB: Old local bitrate estimation: %u", new_bitrate);
   }
@@ -524,7 +522,7 @@ kms_remb_local_on_sending_rtcp (GObject *rtpsession,
 
   g_object_get (rtpsession, "internal-ssrc", &packet_ssrc, NULL);
   if (!kms_rtcp_psfb_afb_remb_marshall_packet (&packet, &remb_packet,
-      packet_ssrc)) {
+          packet_ssrc)) {
     gst_rtcp_packet_remove (&packet);
   }
 
@@ -692,7 +690,6 @@ send_remb_event (KmsRembRemote * rm, guint bitrate, guint ssrc)
     max = rm->max_bw * 1000;
     br = MIN (br, max);
   }
-
   // Custom "bitrate" upstream event that tells the encoder to set a new br
   GST_DEBUG_OBJECT (KMS_REMB_BASE (rm)->rtpsess,
       "'on-feedback-rtcp' send bitrate event"
@@ -817,13 +814,12 @@ end:
 }
 
 static void
-kms_remb_remote_on_feedback_rtcp (GObject *rtpsession,
+kms_remb_remote_on_feedback_rtcp (GObject * rtpsession,
     guint type, guint fbtype, guint sender_ssrc, guint media_ssrc,
-    GstBuffer *fci)
+    GstBuffer * fci)
 {
   GST_LOG_OBJECT (rtpsession, "Signal 'on-feedback-rtcp'");
-  if (type == GST_RTCP_TYPE_PSFB
-      && fbtype == GST_RTCP_PSFB_TYPE_AFB) {
+  if (type == GST_RTCP_TYPE_PSFB && fbtype == GST_RTCP_PSFB_TYPE_AFB) {
     process_psfb_afb (rtpsession, sender_ssrc, fci);
   }
 }

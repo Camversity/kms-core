@@ -38,9 +38,9 @@ std::string HubImpl::getGstreamerDot (
 
 std::string HubImpl::getGstreamerDot()
 {
-  return generateDotGraph(
-      GST_BIN(element),
-      std::make_shared<GstreamerDotDetails>(GstreamerDotDetails::SHOW_VERBOSE));
+  return generateDotGraph (
+           GST_BIN (element),
+           std::make_shared<GstreamerDotDetails> (GstreamerDotDetails::SHOW_VERBOSE) );
 }
 
 HubImpl::HubImpl (const boost::property_tree::ptree &config,
@@ -51,7 +51,7 @@ HubImpl::HubImpl (const boost::property_tree::ptree &config,
 
   pipe = std::dynamic_pointer_cast<MediaPipelineImpl> (getMediaPipeline() );
 
-  element = gst_element_factory_make(factoryName.c_str(), nullptr);
+  element = gst_element_factory_make (factoryName.c_str(), nullptr);
 
   g_object_ref (element);
   pipe->addElement (element);

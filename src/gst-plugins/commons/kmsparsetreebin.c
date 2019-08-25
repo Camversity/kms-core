@@ -70,10 +70,10 @@ create_parser_for_caps (const GstCaps * caps)
   }
 
   if ((parser_factory != NULL) &&
-    (g_strcmp0 (gst_plugin_feature_get_name(parser_factory),
-      "rawaudioparse") != 0) &&
-    (g_strcmp0 (gst_plugin_feature_get_name(parser_factory),
-      "rawvideoparse") != 0)) {
+      (g_strcmp0 (gst_plugin_feature_get_name (parser_factory),
+              "rawaudioparse") != 0) &&
+      (g_strcmp0 (gst_plugin_feature_get_name (parser_factory),
+              "rawvideoparse") != 0)) {
     parser = gst_element_factory_create (parser_factory, NULL);
   } else {
     parser = gst_element_factory_make ("capsfilter", NULL);
@@ -149,8 +149,7 @@ bitrate_calculation_probe (GstPad * pad, GstPadProbeInfo * info,
 
     self->priv->last_buffer_pts = buffer->pts;
     self->priv->last_buffer_dts = buffer->dts;
-  }
-  else if (GST_PAD_PROBE_INFO_TYPE (info) & GST_PAD_PROBE_TYPE_BUFFER_LIST) {
+  } else if (GST_PAD_PROBE_INFO_TYPE (info) & GST_PAD_PROBE_TYPE_BUFFER_LIST) {
     GST_WARNING_OBJECT (self,
         "Bufferlist is not supported yet for bitrate calculation");
   }

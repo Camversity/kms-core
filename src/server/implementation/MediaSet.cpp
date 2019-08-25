@@ -138,7 +138,7 @@ MediaSet::MediaSet()
 {
   terminated = false;
 
-  workers = std::make_shared<WorkerPool>(MEDIASET_THREADS_DEFAULT);
+  workers = std::make_shared<WorkerPool> (MEDIASET_THREADS_DEFAULT);
 
   thread = std::thread ( [&] () {
     std::unique_lock <std::recursive_mutex> lock (recMutex);
@@ -166,7 +166,7 @@ MediaSet::~MediaSet ()
   std::unique_lock <std::recursive_mutex> lock (recMutex);
 
   if (objectsMap.size() > 1) {
-    GST_WARNING ("Still %zu object/s alive", objectsMap.size());
+    GST_WARNING ("Still %zu object/s alive", objectsMap.size() );
   }
 
   terminated = true;

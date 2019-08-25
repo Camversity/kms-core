@@ -149,7 +149,8 @@ public:
   sigc::signal<void, ElementDisconnected> signalElementDisconnected;
   sigc::signal<void, MediaFlowOutStateChange> signalMediaFlowOutStateChange;
   sigc::signal<void, MediaFlowInStateChange> signalMediaFlowInStateChange;
-  sigc::signal<void, MediaTranscodingStateChange> signalMediaTranscodingStateChange;
+  sigc::signal<void, MediaTranscodingStateChange>
+  signalMediaTranscodingStateChange;
 
   virtual void invoke (std::shared_ptr<MediaObjectImpl> obj,
                        const std::string &methodName, const Json::Value &params,
@@ -163,7 +164,8 @@ protected:
   gulong handlerId;
   std::map <std::string, std::shared_ptr <MediaFlowState>> mediaFlowInStates;
   std::map <std::string, std::shared_ptr <MediaFlowState>> mediaFlowOutStates;
-  std::map <std::string, std::shared_ptr <MediaTranscodingState>> mediaTranscodingStates;
+  std::map <std::string, std::shared_ptr <MediaTranscodingState>>
+      mediaTranscodingStates;
 
   virtual void postConstructor () override;
   void collectLatencyStats (std::vector<std::shared_ptr<MediaLatencyStat>>
@@ -182,9 +184,9 @@ private:
   std::recursive_timed_mutex sinksMutex;
 
   std::map < std::shared_ptr <MediaType>, std::map < std::string,
-      std::shared_ptr<ElementConnectionDataInternal >> , MediaTypeCmp > sources;
+      std::shared_ptr<ElementConnectionDataInternal >>, MediaTypeCmp > sources;
   std::map < std::shared_ptr <MediaType>, std::map < std::string,
-      std::set<std::shared_ptr<ElementConnectionDataInternal> >> , MediaTypeCmp >
+      std::set<std::shared_ptr<ElementConnectionDataInternal> >>, MediaTypeCmp >
       sinks;
 
   gulong padAddedHandlerId = 0;

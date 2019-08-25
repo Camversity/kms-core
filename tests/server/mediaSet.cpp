@@ -45,11 +45,11 @@ BOOST_GLOBAL_FIXTURE (InitTests);
 
 InitTests::InitTests()
 {
-  gst_init(nullptr, nullptr);
+  gst_init (nullptr, nullptr);
 
   moduleManager = std::make_shared<ModuleManager>();
 
-  gst_init(nullptr, nullptr);
+  gst_init (nullptr, nullptr);
 
   std::string moduleName = "../../src/server/libkmscoremodule.so";
 
@@ -81,17 +81,17 @@ F::F ()
       factories.push_back (factIt.first);
     }
 
-    modules.push_back(std::make_shared<ModuleInfo>(
-        moduleIt.second->getVersion(), moduleIt.second->getName(),
-        moduleIt.second->getGenerationTime(), factories));
+    modules.push_back (std::make_shared<ModuleInfo> (
+                         moduleIt.second->getVersion(), moduleIt.second->getName(),
+                         moduleIt.second->getGenerationTime(), factories) );
   }
 
   std::shared_ptr<ServerType> type (new ServerType (ServerType::KMS) );
   std::vector<std::string> capabilities;
-  capabilities.emplace_back("transactions");
+  capabilities.emplace_back ("transactions");
 
   std::shared_ptr<ServerInfo> serverInfo =
-      std::make_shared<ServerInfo>("", modules, type, capabilities);
+    std::make_shared<ServerInfo> ("", modules, type, capabilities);
 
   serverManager =  std::dynamic_pointer_cast <ServerManagerImpl>
                    (MediaSet::getMediaSet ()->ref (new ServerManagerImpl (

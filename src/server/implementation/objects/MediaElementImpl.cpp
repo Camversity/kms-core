@@ -232,25 +232,27 @@ processBusMessage (GstBus *bus, GstMessage *msg, MediaElementImpl *self)
   GError *err = NULL;
   gchar *dbg_info = NULL;
 
-  switch (GST_MESSAGE_TYPE (msg)) {
-    case GST_MESSAGE_ERROR:
-      log_level = GST_LEVEL_ERROR;
-      gst_message_parse_error (msg, &err, &dbg_info);
-      break;
-    case GST_MESSAGE_WARNING:
-      log_level = GST_LEVEL_WARNING;
-      gst_message_parse_warning (msg, &err, &dbg_info);
-      break;
-    default:
-      return;
-      break;
+  switch (GST_MESSAGE_TYPE (msg) ) {
+  case GST_MESSAGE_ERROR:
+    log_level = GST_LEVEL_ERROR;
+    gst_message_parse_error (msg, &err, &dbg_info);
+    break;
+
+  case GST_MESSAGE_WARNING:
+    log_level = GST_LEVEL_WARNING;
+    gst_message_parse_warning (msg, &err, &dbg_info);
+    break;
+
+  default:
+    return;
+    break;
   }
 
   GstElement *parent = self->element;
   gint err_code = 0;
   gchar *err_msg = NULL;
 
-  if (!gst_object_has_as_ancestor (msg->src, GST_OBJECT (parent))) {
+  if (!gst_object_has_as_ancestor (msg->src, GST_OBJECT (parent) ) ) {
     return;
   }
 
@@ -260,14 +262,15 @@ processBusMessage (GstBus *bus, GstMessage *msg, MediaElementImpl *self)
   }
 
   GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, log_level, NULL,
-      "Error code %d: '%s', element: %s, parent: %s", err_code,
-      (err_msg ? err_msg : "(None)"), GST_MESSAGE_SRC_NAME (msg),
-      GST_ELEMENT_NAME (parent));
+                     "Error code %d: '%s', element: %s, parent: %s", err_code,
+                     (err_msg ? err_msg : "(None)"), GST_MESSAGE_SRC_NAME (msg),
+                     GST_ELEMENT_NAME (parent) );
 
   GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, log_level, NULL,
-      "Debugging info: %s", (dbg_info ? dbg_info : "(None)"));
+                     "Debugging info: %s", (dbg_info ? dbg_info : "(None)") );
 
   std::string errorMessage (err_msg);
+
   if (dbg_info) {
     errorMessage += " (" + std::string (dbg_info) + ")";
   }
@@ -301,9 +304,9 @@ processBusMessage (GstBus *bus, GstMessage *msg, MediaElementImpl *self)
 static std::chrono::milliseconds
 millisRand ()
 {
-    static thread_local std::mt19937_64 generator;
-    std::uniform_int_distribution<int> distribution (1, 100);
-    return std::chrono::milliseconds (distribution (generator));
+  static thread_local std::mt19937_64 generator;
+  std::uniform_int_distribution<int> distribution (1, 100);
+  return std::chrono::milliseconds (distribution (generator) );
 }
 
 void
@@ -324,7 +327,7 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
           std::defer_lock);
       std::shared_ptr<MediaType> type;
 
-      retry = !lock.try_lock_for (millisRand ());
+      retry = !lock.try_lock_for (millisRand () );
 
       if (retry) {
         continue;
@@ -333,13 +336,13 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
       std::string description;
 
       if (g_str_has_prefix (GST_OBJECT_NAME (pad), "audio_") ) {
-        type = std::make_shared<MediaType>(MediaType::AUDIO);
+        type = std::make_shared<MediaType> (MediaType::AUDIO);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("audio_src") );
       } else if (g_str_has_prefix (GST_OBJECT_NAME (pad), "video_") ) {
-        type = std::make_shared<MediaType>(MediaType::VIDEO);
+        type = std::make_shared<MediaType> (MediaType::VIDEO);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("video_src") );
       } else {
-        type = std::make_shared<MediaType>(MediaType::DATA);
+        type = std::make_shared<MediaType> (MediaType::DATA);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("data_src") );
       }
 
@@ -355,7 +358,7 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
               it->getSink()->sourcesMutex,
               std::defer_lock);
 
-            retry = !sinkLock.try_lock_for (millisRand ());
+            retry = !sinkLock.try_lock_for (millisRand () );
 
             if (retry) {
               continue;
@@ -372,7 +375,7 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
           std::defer_lock);
       std::shared_ptr<MediaType> type;
 
-      retry = !lock.try_lock_for (millisRand ());
+      retry = !lock.try_lock_for (millisRand () );
 
       if (retry) {
         continue;
@@ -381,13 +384,13 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
       std::string description;
 
       if (g_str_has_prefix (GST_OBJECT_NAME (pad), "sink_audio_") ) {
-        type = std::make_shared<MediaType>(MediaType::AUDIO);
+        type = std::make_shared<MediaType> (MediaType::AUDIO);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("sink_audio") );
       } else if (g_str_has_prefix (GST_OBJECT_NAME (pad), "sink_video_") ) {
-        type = std::make_shared<MediaType>(MediaType::VIDEO);
+        type = std::make_shared<MediaType> (MediaType::VIDEO);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("sink_video") );
       } else {
-        type = std::make_shared<MediaType>(MediaType::DATA);
+        type = std::make_shared<MediaType> (MediaType::DATA);
         description = std::string (GST_OBJECT_NAME (pad) + sizeof ("sink_data") );
       }
 
@@ -402,7 +405,7 @@ _media_element_pad_added (GstElement *elem, GstPad *pad, gpointer data)
             std::unique_lock<std::recursive_timed_mutex> sourceLock (source->sinksMutex,
                 std::defer_lock);
 
-            retry = !sourceLock.try_lock_for (millisRand ());
+            retry = !sourceLock.try_lock_for (millisRand () );
 
             if (retry) {
               continue;
@@ -455,28 +458,31 @@ MediaElementImpl::mediaFlowOutStateChange (gboolean isFlowing, gchar *padName,
     KmsElementPadType type)
 {
   std::shared_ptr<MediaFlowState> state;
+
   if (isFlowing) {
     GST_DEBUG_OBJECT (element, "MediaFlowOutStateChange: FLOWING"
-        ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str ());
+                      ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaFlowState> (MediaFlowState::FLOWING);
   } else {
     GST_DEBUG_OBJECT (element, "MediaFlowOutStateChange: NOT FLOWING"
-        ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str ());
+                      ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaFlowState> (MediaFlowState::NOT_FLOWING);
   }
 
   std::string key;
+
   if (type == KMS_ELEMENT_PAD_TYPE_VIDEO) {
     key = std::string (TYPE_VIDEO) + std::string (padName);
   } else {
     key = std::string (TYPE_AUDIO) + std::string (padName);
   }
+
   mediaFlowOutStates[key] = state;
 
   try {
     MediaFlowOutStateChange event (shared_from_this(),
                                    MediaFlowOutStateChange::getName (),
-                                   state, padName, padTypeToMediaType (type));
+                                   state, padName, padTypeToMediaType (type) );
     signalMediaFlowOutStateChange (event);
   } catch (std::bad_weak_ptr &e) {
   }
@@ -487,28 +493,31 @@ MediaElementImpl::mediaFlowInStateChange (gboolean isFlowing, gchar *padName,
     KmsElementPadType type)
 {
   std::shared_ptr<MediaFlowState> state;
+
   if (isFlowing) {
     GST_DEBUG_OBJECT (element, "MediaFlowInStateChange: FLOWING"
-        ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str ());
+                      ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaFlowState> (MediaFlowState::FLOWING);
   } else {
     GST_DEBUG_OBJECT (element, "MediaFlowInStateChange: NOT FLOWING"
-        ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str ());
+                      ", pad: '%s', type: '%s'", padName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaFlowState> (MediaFlowState::NOT_FLOWING);
   }
 
   std::string key;
+
   if (type == KMS_ELEMENT_PAD_TYPE_VIDEO) {
     key = std::string (TYPE_VIDEO) + std::string (padName);
   } else {
     key = std::string (TYPE_AUDIO) + std::string (padName);
   }
+
   mediaFlowInStates[key] = state;
 
   try {
     MediaFlowInStateChange event (shared_from_this(),
                                   MediaFlowInStateChange::getName (),
-                                  state, padName, padTypeToMediaType (type));
+                                  state, padName, padTypeToMediaType (type) );
     signalMediaFlowInStateChange (event);
   } catch (std::bad_weak_ptr &e) {
   }
@@ -519,30 +528,33 @@ MediaElementImpl::onMediaTranscodingStateChange (gboolean isTranscoding,
     gchar *binName, KmsElementPadType type)
 {
   std::shared_ptr<MediaTranscodingState> state;
+
   if (isTranscoding) {
     GST_DEBUG_OBJECT (element, "MediaTranscodingStateChange: TRANSCODING"
-        ", bin: '%s', type: '%s'", binName, padTypeToString (type).c_str ());
+                      ", bin: '%s', type: '%s'", binName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaTranscodingState> (
-        MediaTranscodingState::TRANSCODING);
+              MediaTranscodingState::TRANSCODING);
   } else {
     GST_DEBUG_OBJECT (element, "MediaTranscodingStateChange: NOT TRANSCODING"
-        ", bin: '%s', type: '%s'", binName, padTypeToString (type).c_str ());
+                      ", bin: '%s', type: '%s'", binName, padTypeToString (type).c_str () );
     state = std::make_shared <MediaTranscodingState> (
-        MediaTranscodingState::NOT_TRANSCODING);
+              MediaTranscodingState::NOT_TRANSCODING);
   }
 
   std::string key;
+
   if (type == KMS_ELEMENT_PAD_TYPE_VIDEO) {
     key = std::string (TYPE_VIDEO) + std::string (binName);
   } else {
     key = std::string (TYPE_AUDIO) + std::string (binName);
   }
+
   mediaTranscodingStates[key] = state;
 
   try {
     MediaTranscodingStateChange event (shared_from_this(),
                                        MediaTranscodingStateChange::getName (),
-                                       state, binName, padTypeToMediaType (type));
+                                       state, binName, padTypeToMediaType (type) );
     signalMediaTranscodingStateChange (event);
   } catch (std::bad_weak_ptr &e) {
     GST_WARNING_OBJECT (element, "Cannot emit event: MediaTranscodingStateChange");
@@ -571,12 +583,12 @@ MediaElementImpl::postConstructor ()
                        (shared_from_this() ) );
 
   mediaTranscodingHandler = register_signal_handler (G_OBJECT (element),
-                       "media-transcoding",
-                       std::function <void (GstElement *, gboolean, gchar *, KmsElementPadType) >
-                       (std::bind (&MediaElementImpl::onMediaTranscodingStateChange, this,
-                                   std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) ),
-                       std::dynamic_pointer_cast<MediaElementImpl>
-                       (shared_from_this() ) );
+                            "media-transcoding",
+                            std::function <void (GstElement *, gboolean, gchar *, KmsElementPadType) >
+                            (std::bind (&MediaElementImpl::onMediaTranscodingStateChange, this,
+                                        std::placeholders::_2, std::placeholders::_3, std::placeholders::_4) ),
+                            std::dynamic_pointer_cast<MediaElementImpl>
+                            (shared_from_this() ) );
 }
 
 MediaElementImpl::MediaElementImpl (const boost::property_tree::ptree &config,
@@ -587,7 +599,7 @@ MediaElementImpl::MediaElementImpl (const boost::property_tree::ptree &config,
 
   pipe = std::dynamic_pointer_cast<MediaPipelineImpl> (getMediaPipeline() );
 
-  element = gst_element_factory_make(factoryName.c_str(), nullptr);
+  element = gst_element_factory_make (factoryName.c_str(), nullptr);
 
   if (element == nullptr) {
     throw KurentoException (MEDIA_OBJECT_NOT_AVAILABLE,
@@ -607,7 +619,8 @@ MediaElementImpl::MediaElementImpl (const boost::property_tree::ptree &config,
 
   //read default configuration for output bitrate
   int bitrate;
-  if (getConfigValue<int, MediaElement> (&bitrate, "outputBitrate")) {
+
+  if (getConfigValue<int, MediaElement> (&bitrate, "outputBitrate") ) {
     GST_DEBUG ("Output bitrate configured to %d bps", bitrate);
     g_object_set (G_OBJECT (element), MIN_OUTPUT_BITRATE, bitrate,
                   MAX_OUTPUT_BITRATE, bitrate, NULL);
@@ -664,7 +677,7 @@ void MediaElementImpl::disconnectAll ()
     std::unique_lock<std::recursive_timed_mutex> sinkLock (sinksMutex,
         std::defer_lock);
 
-    if (!sinkLock.try_lock_for (millisRand ())) {
+    if (!sinkLock.try_lock_for (millisRand () ) ) {
       GST_DEBUG_OBJECT (getGstreamerElement(), "Retry disconnect all");
       continue;
     }
@@ -675,12 +688,11 @@ void MediaElementImpl::disconnectAll ()
       std::unique_lock<std::recursive_timed_mutex> sinkLock (sinkImpl->sourcesMutex,
           std::defer_lock);
 
-      if (sinkLock.try_lock_for (millisRand ())) {
+      if (sinkLock.try_lock_for (millisRand () ) ) {
         disconnect (connData->getSink (), connData->getType (),
                     connData->getSourceDescription (),
                     connData->getSinkDescription () );
-      }
-      else {
+      } else {
         GST_DEBUG_OBJECT (sinkImpl->getGstreamerElement(),
                           "Retry disconnect all %" GST_PTR_FORMAT, getGstreamerElement() );
       }
@@ -691,7 +703,7 @@ void MediaElementImpl::disconnectAll ()
     std::unique_lock<std::recursive_timed_mutex> sourceLock (sourcesMutex,
         std::defer_lock);
 
-    if (!sourceLock.try_lock_for (millisRand ())) {
+    if (!sourceLock.try_lock_for (millisRand () ) ) {
       GST_DEBUG_OBJECT (getGstreamerElement(), "Retry disconnect all");
       continue;
     }
@@ -703,13 +715,12 @@ void MediaElementImpl::disconnectAll ()
       std::unique_lock<std::recursive_timed_mutex> sourceLock (sourceImpl->sinksMutex,
           std::defer_lock);
 
-      if (sourceLock.try_lock_for (millisRand ())) {
+      if (sourceLock.try_lock_for (millisRand () ) ) {
         connData->getSource ()->disconnect (connData->getSink (),
                                             connData->getType (),
                                             connData->getSourceDescription (),
                                             connData->getSinkDescription () );
-      }
-      else {
+      } else {
         GST_DEBUG_OBJECT (sourceImpl->getGstreamerElement (),
                           "Retry disconnect all %" GST_PTR_FORMAT, getGstreamerElement() );
       }
@@ -845,11 +856,11 @@ std::vector<std::shared_ptr<ElementConnectionData>>
 void MediaElementImpl::connect (std::shared_ptr<MediaElement> sink)
 {
   // Until mediaDescriptions are really used, we just connect audio an video
-  connect(sink, std::make_shared<MediaType>(MediaType::AUDIO), DEFAULT,
-          DEFAULT);
-  connect(sink, std::make_shared<MediaType>(MediaType::VIDEO), DEFAULT,
-          DEFAULT);
-  connect(sink, std::make_shared<MediaType>(MediaType::DATA), DEFAULT, DEFAULT);
+  connect (sink, std::make_shared<MediaType> (MediaType::AUDIO), DEFAULT,
+           DEFAULT);
+  connect (sink, std::make_shared<MediaType> (MediaType::VIDEO), DEFAULT,
+           DEFAULT);
+  connect (sink, std::make_shared<MediaType> (MediaType::DATA), DEFAULT, DEFAULT);
 }
 
 void MediaElementImpl::connect (std::shared_ptr<MediaElement> sink,
@@ -987,12 +998,12 @@ MediaElementImpl::performConnection (std::shared_ptr
 void MediaElementImpl::disconnect (std::shared_ptr<MediaElement> sink)
 {
   // Until mediaDescriptions are really used, we just disconnect audio an video
-  disconnect(sink, std::make_shared<MediaType>(MediaType::AUDIO), DEFAULT,
-             DEFAULT);
-  disconnect(sink, std::make_shared<MediaType>(MediaType::VIDEO), DEFAULT,
-             DEFAULT);
-  disconnect(sink, std::make_shared<MediaType>(MediaType::DATA), DEFAULT,
-             DEFAULT);
+  disconnect (sink, std::make_shared<MediaType> (MediaType::AUDIO), DEFAULT,
+              DEFAULT);
+  disconnect (sink, std::make_shared<MediaType> (MediaType::VIDEO), DEFAULT,
+              DEFAULT);
+  disconnect (sink, std::make_shared<MediaType> (MediaType::DATA), DEFAULT,
+              DEFAULT);
 }
 
 void MediaElementImpl::disconnect (std::shared_ptr<MediaElement> sink,
@@ -1141,9 +1152,9 @@ std::string MediaElementImpl::getGstreamerDot (
 
 std::string MediaElementImpl::getGstreamerDot()
 {
-  return generateDotGraph(
-      GST_BIN(element),
-      std::make_shared<GstreamerDotDetails>(GstreamerDotDetails::SHOW_VERBOSE));
+  return generateDotGraph (
+           GST_BIN (element),
+           std::make_shared<GstreamerDotDetails> (GstreamerDotDetails::SHOW_VERBOSE) );
 }
 
 void MediaElementImpl::setOutputBitrate (int bitrate)
@@ -1231,11 +1242,11 @@ std::map <std::string, std::shared_ptr<Stats>>
   g_signal_emit_by_name (getGstreamerElement(), "stats", selector, &stats);
 
   const auto epoch = std::chrono::high_resolution_clock::now ()
-      .time_since_epoch ();
+                     .time_since_epoch ();
   const int64_t timestampMillis =
-      std::chrono::duration_cast<std::chrono::milliseconds> (epoch).count ();
+    std::chrono::duration_cast<std::chrono::milliseconds> (epoch).count ();
 
-  fillStatsReport(statsReport, stats, time(nullptr), timestampMillis);
+  fillStatsReport (statsReport, stats, time (nullptr), timestampMillis);
 
   gst_structure_free (stats);
 
@@ -1245,7 +1256,7 @@ std::map <std::string, std::shared_ptr<Stats>>
 std::map <std::string, std::shared_ptr<Stats>>
     MediaElementImpl::getStats ()
 {
-  return generateStats(nullptr);
+  return generateStats (nullptr);
 }
 
 std::map <std::string, std::shared_ptr<Stats>>
@@ -1329,9 +1340,9 @@ setDeprecatedProperties (std::shared_ptr<ElementStats> eStats)
 
   for (auto &inStat : inStats) {
     if (inStat->getName() == "sink_audio_default") {
-      eStats->setInputAudioLatency(inStat->getAvg());
+      eStats->setInputAudioLatency (inStat->getAvg() );
     } else if (inStat->getName() == "sink_video_default") {
-      eStats->setInputVideoLatency(inStat->getAvg());
+      eStats->setInputVideoLatency (inStat->getAvg() );
     }
   }
 }
@@ -1409,7 +1420,8 @@ bool MediaElementImpl::isMediaFlowingIn (std::shared_ptr<MediaType> mediaType,
   }
 
   auto it = mediaFlowInStates.find (key);
-  if (it != mediaFlowInStates.end()) {
+
+  if (it != mediaFlowInStates.end() ) {
     if (it->second->getValue () == MediaFlowState::FLOWING) {
       ret = true;
     }
@@ -1440,7 +1452,8 @@ bool MediaElementImpl::isMediaFlowingOut (std::shared_ptr<MediaType> mediaType,
   }
 
   auto it = mediaFlowOutStates.find (key);
-  if (it != mediaFlowOutStates.end()) {
+
+  if (it != mediaFlowOutStates.end() ) {
     if (it->second->getValue () == MediaFlowState::FLOWING) {
       ret = true;
     }
@@ -1460,6 +1473,7 @@ bool MediaElementImpl::isMediaTranscoding (std::shared_ptr<MediaType> mediaType,
   gboolean ret = false;
 
   std::string key;
+
   if (mediaType->getValue () == MediaType::VIDEO) {
     key = std::string (TYPE_VIDEO) + std::string (binName);
   } else if (mediaType->getValue () == MediaType::AUDIO) {
@@ -1471,7 +1485,8 @@ bool MediaElementImpl::isMediaTranscoding (std::shared_ptr<MediaType> mediaType,
   }
 
   auto it = mediaTranscodingStates.find (key);
-  if (it != mediaTranscodingStates.end()) {
+
+  if (it != mediaTranscodingStates.end() ) {
     if (it->second->getValue () == MediaTranscodingState::TRANSCODING) {
       ret = true;
     }

@@ -1,0 +1,2 @@
+/usr/bin/ar qc libkmsutils.a  CMakeFiles/kmsutils.dir/kmsutils.c.o
+/usr/bin/ranlib libkmsutils.a

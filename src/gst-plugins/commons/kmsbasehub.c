@@ -55,7 +55,7 @@ GST_DEBUG_CATEGORY_STATIC (kms_base_hub_debug_category);
 #define DATA_SRC_PAD_PREFIX "data_src_"
 #define LENGTH_AUDIO_SRC_PAD_PREFIX 10  // sizeof("audio_src_")
 #define LENGTH_VIDEO_SRC_PAD_PREFIX 10  // sizeof("video_src_")
-#define LENGTH_DATA_SRC_PAD_PREFIX 9  // sizeof("data_src_")
+#define LENGTH_DATA_SRC_PAD_PREFIX 9    // sizeof("data_src_")
 #define AUDIO_SRC_PAD_NAME AUDIO_SRC_PAD_PREFIX "%u"
 #define VIDEO_SRC_PAD_NAME VIDEO_SRC_PAD_PREFIX "%u"
 #define DATA_SRC_PAD_NAME DATA_SRC_PAD_PREFIX "%u"
@@ -608,8 +608,7 @@ kms_base_hub_link_data_sink_default (KmsBaseHub * self, gint id,
 
   ret = kms_base_hub_link_sink_pad (self, id, gp_name, DATA_SINK_PAD_NAME,
       internal_element, pad_name, HUB_DATA_SRC_PAD,
-      G_STRUCT_OFFSET (KmsBaseHubPortData, data_sink_target),
-      remove_on_unlink);
+      G_STRUCT_OFFSET (KmsBaseHubPortData, data_sink_target), remove_on_unlink);
 
   g_free (gp_name);
 
@@ -811,8 +810,7 @@ kms_base_hub_pad_added (KmsBaseHub * self, GstPad * pad, gpointer data)
 
     gst_element_link_pads (GST_ELEMENT (self), GST_OBJECT_NAME (pad),
         port->port, HUB_VIDEO_SINK_PAD);
-  }
-  else if (g_str_has_prefix (GST_OBJECT_NAME (pad), AUDIO_SRC_PAD_PREFIX)) {
+  } else if (g_str_has_prefix (GST_OBJECT_NAME (pad), AUDIO_SRC_PAD_PREFIX)) {
     KmsBaseHubPortData *port;
     gint64 id;
     const gchar *pad_name;
@@ -823,8 +821,7 @@ kms_base_hub_pad_added (KmsBaseHub * self, GstPad * pad, gpointer data)
 
     gst_element_link_pads (GST_ELEMENT (self), GST_OBJECT_NAME (pad),
         port->port, HUB_AUDIO_SINK_PAD);
-  }
-  else if (g_str_has_prefix (GST_OBJECT_NAME (pad), DATA_SRC_PAD_PREFIX)) {
+  } else if (g_str_has_prefix (GST_OBJECT_NAME (pad), DATA_SRC_PAD_PREFIX)) {
     KmsBaseHubPortData *port;
     gint64 id;
     const gchar *pad_name;
@@ -864,8 +861,7 @@ endpoint_pad_added (GstElement * endpoint, GstPad * pad,
         VIDEO_SINK_PAD_NAME, port_data->video_sink_target);
 
     g_free (gp_name);
-  }
-  else if (port_data->audio_sink_target != NULL
+  } else if (port_data->audio_sink_target != NULL
       && g_strstr_len (GST_OBJECT_NAME (pad), -1, AUDIO_STREAM_NAME)) {
     gchar *gp_name = g_strdup_printf (AUDIO_SINK_PAD_PREFIX "%d",
         port_data->id);
@@ -878,8 +874,7 @@ endpoint_pad_added (GstElement * endpoint, GstPad * pad,
         AUDIO_SINK_PAD_NAME, port_data->audio_sink_target);
 
     g_free (gp_name);
-  }
-  else if (port_data->data_sink_target != NULL
+  } else if (port_data->data_sink_target != NULL
       && g_strstr_len (GST_OBJECT_NAME (pad), -1, DATA_STREAM_NAME)) {
     gchar *gp_name = g_strdup_printf (DATA_SINK_PAD_PREFIX "%d",
         port_data->id);
@@ -986,8 +981,7 @@ kms_base_hub_class_init (KmsBaseHubClass * klass)
       GST_DEBUG_FUNCPTR (kms_base_hub_link_audio_src_default);
   klass->link_video_src =
       GST_DEBUG_FUNCPTR (kms_base_hub_link_video_src_default);
-  klass->link_data_src =
-      GST_DEBUG_FUNCPTR (kms_base_hub_link_data_src_default);
+  klass->link_data_src = GST_DEBUG_FUNCPTR (kms_base_hub_link_data_src_default);
 
   klass->unlink_audio_sink =
       GST_DEBUG_FUNCPTR (kms_base_hub_unlink_audio_sink_default);

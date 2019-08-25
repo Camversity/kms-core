@@ -334,7 +334,8 @@ rtp_ssrc_demux_new_ssrc_pad (GstElement * ssrcdemux, guint ssrc, GstPad * pad,
   }
 
   /* RTP */
-  sink = kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
   kms_base_rtp_session_link_pads (pad, sink);
   g_object_unref (sink);
 
@@ -342,7 +343,8 @@ rtp_ssrc_demux_new_ssrc_pad (GstElement * ssrcdemux, guint ssrc, GstPad * pad,
   rtcp_pad_name = g_strconcat ("rtcp_", rtp_pad_name, NULL);
   src = gst_element_get_static_pad (ssrcdemux, rtcp_pad_name);
   g_free (rtcp_pad_name);
-  sink = kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
   kms_base_rtp_session_link_pads (src, sink);
   g_object_unref (src);
   g_object_unref (sink);
@@ -435,14 +437,16 @@ kms_base_rtp_session_link_gst_connection_src (KmsBaseRtpSession * self,
 
   /* RTP */
   src = kms_i_rtp_connection_request_rtp_src (conn);
-  sink = kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
   kms_base_rtp_session_link_pads (src, sink);
   g_object_unref (src);
   g_object_unref (sink);
 
   /* RTCP */
   src = kms_i_rtp_connection_request_rtcp_src (conn);
-  sink = kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
   kms_base_rtp_session_link_pads (src, sink);
   g_object_unref (src);
   g_object_unref (sink);
@@ -462,14 +466,16 @@ kms_base_rtp_session_add_gst_rtcp_mux_elements (KmsBaseRtpSession * self,
 
   /* RTP */
   src = kms_i_rtp_connection_request_rtp_src (conn);
-  sink = kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtp_sink (self->manager, self, media);
   kms_base_rtp_session_link_pads (src, sink);
   g_object_unref (src);
   g_object_unref (sink);
 
   /* RTCP */
   src = gst_element_get_static_pad (rtcpdemux, "rtcp_src");
-  sink = kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
+  sink =
+      kms_i_rtp_session_manager_request_rtcp_sink (self->manager, self, media);
   g_object_unref (src);
   g_object_unref (sink);
 
@@ -517,12 +523,10 @@ kms_base_rtp_session_add_gst_connection_elements (KmsBaseRtpSession * self,
     // BUNDLE connection
     kms_base_rtp_session_add_gst_bundle_elements (self, conn, media, active);
     kms_base_rtp_session_link_gst_connection_sink (self, conn, media);
-  }
-  else if (gst_sdp_media_get_attribute_val (media, "rtcp-mux") != NULL) {
+  } else if (gst_sdp_media_get_attribute_val (media, "rtcp-mux") != NULL) {
     // Multiplexed RTP & RTCP connection (both go through the same port)
     kms_base_rtp_session_add_gst_rtcp_mux_elements (self, conn, media, active);
-  }
-  else {
+  } else {
     // Basic connection (typical separated ports for RTP and RTCP)
     kms_base_rtp_session_add_gst_basic_elements (self, conn, media, active);
   }
@@ -711,9 +715,10 @@ kms_base_rtp_session_start_transport_send (KmsBaseRtpSession * self,
       continue;
     }
 
-    if (!kms_base_rtp_session_configure_media_connection (self, handler, neg_media,
-            rem_media, offerer)) {
-      GST_WARNING_OBJECT (self, "Cannot configure connection for media (id=%u)", i);
+    if (!kms_base_rtp_session_configure_media_connection (self, handler,
+            neg_media, rem_media, offerer)) {
+      GST_WARNING_OBJECT (self, "Cannot configure connection for media (id=%u)",
+          i);
     }
 
     g_object_unref (handler);

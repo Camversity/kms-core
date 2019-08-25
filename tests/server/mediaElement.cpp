@@ -41,7 +41,7 @@ BOOST_GLOBAL_FIXTURE (GF);
 
 GF::GF()
 {
-  gst_init(nullptr, nullptr);
+  gst_init (nullptr, nullptr);
   moduleManager.loadModulesFromDirectories ("../../src/server");
 }
 

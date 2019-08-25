@@ -158,8 +158,8 @@ GST_START_TEST (test_sync_one_stream_rtptime_after_sr_rtptime)
 
   g_object_unref (sync);
 }
-GST_END_TEST
 
+GST_END_TEST
 GST_START_TEST (test_sync_two_streams)
 {
   KmsRtpSynchronizer *sync_audio, *sync_video;
@@ -174,14 +174,14 @@ GST_START_TEST (test_sync_two_streams)
 
   sync_audio = kms_rtp_synchronizer_new (FALSE, NULL);
   fail_unless (kms_rtp_synchronizer_add_clock_rate_for_pt (sync_audio, Aud_pt,
-      Aud_clock, NULL));
+          Aud_clock, NULL));
   sync_video = kms_rtp_synchronizer_new (FALSE, NULL);
   fail_unless (kms_rtp_synchronizer_add_clock_rate_for_pt (sync_video, Vid_pt,
-      Vid_clock, NULL));
+          Vid_clock, NULL));
 
-  const GstClockTime Bad_time = 42 * GST_SECOND; // Simulates a bad PTS input from a stream
-  const GstClockTime Ref_time = 12 * GST_SECOND; // A reference processing time, such as '00:01:15'
-  const GstClockTime Day_time = 60 * GST_SECOND; // An arbitrary datetime, such as '2017-10-19@13:01:15'
+  const GstClockTime Bad_time = 42 * GST_SECOND;        // Simulates a bad PTS input from a stream
+  const GstClockTime Ref_time = 12 * GST_SECOND;        // A reference processing time, such as '00:01:15'
+  const GstClockTime Day_time = 60 * GST_SECOND;        // An arbitrary datetime, such as '2017-10-19@13:01:15'
   const guint64 Day_ntp_ts = gst_util_uint64_scale (Day_time, (1LL << 32),
       GST_SECOND);
 
@@ -206,8 +206,8 @@ GST_START_TEST (test_sync_two_streams)
   g_object_unref (sync_audio);
   g_object_unref (sync_video);
 }
-GST_END_TEST
 
+GST_END_TEST
 GST_START_TEST (test_sync_avoid_negative_pts)
 {
   KmsRtpSynchronizer *sync;

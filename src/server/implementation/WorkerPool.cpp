@@ -56,16 +56,16 @@ WorkerPool::WorkerPool (int threads)
   watcher_service = boost::shared_ptr< boost::asio::io_service >
                     ( new boost::asio::io_service () );
   watcher_work =
-      std::make_shared<boost::asio::io_service::work>(*watcher_service);
+    std::make_shared<boost::asio::io_service::work> (*watcher_service);
   watcher = std::thread (std::bind (&workerThreadLoop, watcher_service) );
 
   /* Prepare pool of threads */
   io_service = boost::shared_ptr< boost::asio::io_service >
                ( new boost::asio::io_service () );
-  work = std::make_shared<boost::asio::io_service::work>(*io_service);
+  work = std::make_shared<boost::asio::io_service::work> (*io_service);
 
   for (int i = 0; i < threads; i++) {
-    workers.emplace_back(std::bind(&workerThreadLoop, io_service));
+    workers.emplace_back (std::bind (&workerThreadLoop, io_service) );
   }
 }
 
@@ -96,7 +96,7 @@ WorkerPool::~WorkerPool()
 
   for (auto &worker : workers) {
     try {
-      if (std::this_thread::get_id() != worker.get_id()) {
+      if (std::this_thread::get_id() != worker.get_id() ) {
         worker.join();
       }
     } catch (std::system_error &e) {
@@ -104,7 +104,7 @@ WorkerPool::~WorkerPool()
     }
 
     try {
-      if (worker.joinable()) {
+      if (worker.joinable() ) {
         worker.detach();
       }
     } catch (std::system_error &e) {
@@ -132,7 +132,7 @@ WorkerPool::checkWorkers ()
 {
   std::shared_ptr<std::atomic<bool>> alive;
 
-  alive = std::make_shared<std::atomic<bool>>(false);
+  alive = std::make_shared<std::atomic<bool>> (false);
 
   io_service->post (std::bind (&async_worker_test, alive) );
 
@@ -142,7 +142,7 @@ WorkerPool::checkWorkers ()
   timer->expires_from_now ( boost::posix_time::seconds (
                               WORKER_THREADS_TIMEOUT) );
   timer->async_wait ( [timer, alive,
-  this] (const boost::system::error_code & error) {
+         this] (const boost::system::error_code & error) {
     if (error) {
       GST_ERROR ("ERROR: %s", error.message().c_str() );
       return;
@@ -157,7 +157,7 @@ WorkerPool::checkWorkers ()
     std::unique_lock <std::mutex> lock (mutex);
 
     if (!terminated) {
-      workers.emplace_back(std::bind(&workerThreadLoop, io_service));
+      workers.emplace_back (std::bind (&workerThreadLoop, io_service) );
     }
   });
 }

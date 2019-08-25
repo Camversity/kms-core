@@ -1,0 +1,2 @@
+/usr/bin/ar qc libsdputils.a  CMakeFiles/sdputils.dir/sdp_utils.c.o
+/usr/bin/ranlib libsdputils.a

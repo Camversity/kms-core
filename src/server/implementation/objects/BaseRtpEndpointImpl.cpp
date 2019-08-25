@@ -95,12 +95,14 @@ BaseRtpEndpointImpl::BaseRtpEndpointImpl (const boost::property_tree::ptree
   connStateChangedHandlerId = 0;
 
   guint minPort;
-  if (getConfigValue<guint, BaseRtpEndpoint> (&minPort, PARAM_MIN_PORT)) {
+
+  if (getConfigValue<guint, BaseRtpEndpoint> (&minPort, PARAM_MIN_PORT) ) {
     g_object_set (getGstreamerElement (), PROP_MIN_PORT, minPort, NULL);
   }
 
   guint maxPort;
-  if (getConfigValue <guint, BaseRtpEndpoint> (&maxPort, PARAM_MAX_PORT)) {
+
+  if (getConfigValue <guint, BaseRtpEndpoint> (&maxPort, PARAM_MAX_PORT) ) {
     g_object_set (getGstreamerElement (), PROP_MAX_PORT, maxPort, NULL);
   }
 }
@@ -582,9 +584,9 @@ setDeprecatedProperties (std::shared_ptr<EndpointStats> eStats)
 
   for (auto &inStat : inStats) {
     if (inStat->getName() == "sink_audio_default") {
-      eStats->setAudioE2ELatency(inStat->getAvg());
+      eStats->setAudioE2ELatency (inStat->getAvg() );
     } else if (inStat->getName() == "sink_video_default") {
-      eStats->setVideoE2ELatency(inStat->getAvg());
+      eStats->setVideoE2ELatency (inStat->getAvg() );
     }
   }
 }

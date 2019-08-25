@@ -41,11 +41,14 @@ struct GF {
 class SdpEndpointFactory : public Factory
 {
 public:
-  std::string getName () const override { return "SdpEndpointFactory"; }
+  std::string getName () const override
+  {
+    return "SdpEndpointFactory";
+  }
 
 protected:
   MediaObjectImpl *createObjectPointer (const boost::property_tree::ptree &conf,
-      const Json::Value &params) const override
+                                        const Json::Value &params) const override
   {
     std::string mediaPipelineId = params["mediaPipeline"].asString ();
     bool useIpv6 = false;
@@ -69,7 +72,7 @@ BOOST_GLOBAL_FIXTURE (GF);
 
 GF::GF()
 {
-  gst_init(nullptr, nullptr);
+  gst_init (nullptr, nullptr);
   moduleManager.loadModulesFromDirectories ("../../src/server");
 }
 

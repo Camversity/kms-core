@@ -40,18 +40,20 @@ MediaPipelineImpl::processBusMessage (GstMessage *msg)
   GError *err = NULL;
   gchar *dbg_info = NULL;
 
-  switch (GST_MESSAGE_TYPE (msg)) {
-    case GST_MESSAGE_ERROR:
-      log_level = GST_LEVEL_ERROR;
-      gst_message_parse_error (msg, &err, &dbg_info);
-      break;
-    case GST_MESSAGE_WARNING:
-      log_level = GST_LEVEL_WARNING;
-      gst_message_parse_warning (msg, &err, &dbg_info);
-      break;
-    default:
-      return;
-      break;
+  switch (GST_MESSAGE_TYPE (msg) ) {
+  case GST_MESSAGE_ERROR:
+    log_level = GST_LEVEL_ERROR;
+    gst_message_parse_error (msg, &err, &dbg_info);
+    break;
+
+  case GST_MESSAGE_WARNING:
+    log_level = GST_LEVEL_WARNING;
+    gst_message_parse_warning (msg, &err, &dbg_info);
+    break;
+
+  default:
+    return;
+    break;
   }
 
   GstElement *parent = this->pipeline;
@@ -64,14 +66,15 @@ MediaPipelineImpl::processBusMessage (GstMessage *msg)
   }
 
   GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, log_level, NULL,
-      "Error code %d: '%s', element: %s, parent: %s", err_code,
-      (err_msg ? err_msg : "(None)"), GST_MESSAGE_SRC_NAME (msg),
-      GST_ELEMENT_NAME (parent));
+                     "Error code %d: '%s', element: %s, parent: %s", err_code,
+                     (err_msg ? err_msg : "(None)"), GST_MESSAGE_SRC_NAME (msg),
+                     GST_ELEMENT_NAME (parent) );
 
   GST_CAT_LEVEL_LOG (GST_CAT_DEFAULT, log_level, NULL,
-      "Debugging info: %s", (dbg_info ? dbg_info : "(None)"));
+                     "Debugging info: %s", (dbg_info ? dbg_info : "(None)") );
 
   std::string errorMessage (err_msg);
+
   if (dbg_info) {
     errorMessage += " (" + std::string (dbg_info) + ")";
   }
@@ -87,8 +90,8 @@ MediaPipelineImpl::processBusMessage (GstMessage *msg)
 
   gchar *dot_name = g_strdup_printf ("%s_bus_%d", GST_DEFAULT_NAME, err_code);
   GST_DEBUG_BIN_TO_DOT_FILE_WITH_TS (GST_BIN (parent), GST_DEBUG_GRAPH_SHOW_ALL,
-      dot_name);
-  g_free(dot_name);
+                                     dot_name);
+  g_free (dot_name);
 
   g_error_free (err);
   g_free (dbg_info);
@@ -118,7 +121,7 @@ MediaPipelineImpl::MediaPipelineImpl (const boost::property_tree::ptree &config)
 {
   GstClock *clock;
 
-  pipeline = gst_pipeline_new(nullptr);
+  pipeline = gst_pipeline_new (nullptr);
 
   if (pipeline == nullptr) {
     throw KurentoException (MEDIA_OBJECT_NOT_AVAILABLE,
@@ -157,9 +160,9 @@ std::string MediaPipelineImpl::getGstreamerDot (
 
 std::string MediaPipelineImpl::getGstreamerDot()
 {
-  return generateDotGraph(
-      GST_BIN(pipeline),
-      std::make_shared<GstreamerDotDetails>(GstreamerDotDetails::SHOW_VERBOSE));
+  return generateDotGraph (
+           GST_BIN (pipeline),
+           std::make_shared<GstreamerDotDetails> (GstreamerDotDetails::SHOW_VERBOSE) );
 }
 
 bool

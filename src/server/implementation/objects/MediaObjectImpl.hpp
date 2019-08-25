@@ -107,7 +107,7 @@ public:
       array.push_back (std::make_pair ("val", child) );
     } catch (boost::property_tree::ptree_bad_path &) {
       // This case is expected, the requested key doesn't exist in config
-      GST_DEBUG ("Key '%s' not in config", key.c_str());
+      GST_DEBUG ("Key '%s' not in config", key.c_str() );
       return false;
     }
 
@@ -115,12 +115,14 @@ public:
     reader.parse (ss.str(), val);
     serializer.JsonValue = val;
 
-    GST_DEBUG ("getConfigValue key: '%s', value: '%s'", key.c_str(), ss.str().c_str());
+    GST_DEBUG ("getConfigValue key: '%s', value: '%s'", key.c_str(),
+               ss.str().c_str() );
 
     try {
       serializer.Serialize ("val", *value);
     } catch (KurentoException &e) {
-      GST_WARNING ("Error deserializing '%s' from config: %s", key.c_str(), e.what());
+      GST_WARNING ("Error deserializing '%s' from config: %s", key.c_str(),
+                   e.what() );
       return false;
     }
 
@@ -139,17 +141,18 @@ protected:
   bool getConfigValue (T *value, const std::string &key)
   {
     return getConfigValue <T> (value, "modules."
-        + dynamic_cast <C *> (this)->getModule() + "."
-        + dynamic_cast <C *> (this)->getType() + "." + key, config);
+                               + dynamic_cast <C *> (this)->getModule() + "."
+                               + dynamic_cast <C *> (this)->getType() + "." + key, config);
   }
 
   template <class T>
   bool getConfigValue (T *value, const std::string &key, const T &defaultValue)
   {
-    if (!getConfigValue <T> (value, key, config)) {
+    if (!getConfigValue <T> (value, key, config) ) {
       *value = defaultValue;
       return false;
     }
+
     return true;
   }
 
@@ -157,11 +160,12 @@ protected:
   bool getConfigValue (T *value, const std::string &key, const T &defaultValue)
   {
     if (!getConfigValue <T> (value, "modules."
-        + dynamic_cast <C *> (this)->getModule() + "."
-        + dynamic_cast <C *> (this)->getType() + "." + key, config)) {
+                             + dynamic_cast <C *> (this)->getModule() + "."
+                             + dynamic_cast <C *> (this)->getType() + "." + key, config) ) {
       *value = defaultValue;
       return false;
     }
+
     return true;
   }
 

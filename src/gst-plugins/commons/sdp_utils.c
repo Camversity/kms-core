@@ -411,16 +411,14 @@ intersect_attribute (const GstSDPAttribute * attr,
       return FALSE;
     }
     a = &new_attr;
-  }
-  else if (g_strcmp0 (attr->key, "direction") == 0) {
+  } else if (g_strcmp0 (attr->key, "direction") == 0) {
     // COMEDIA-based discovery of remote IP+port
     if (!sdp_utils_add_comedia_attribute (attr, &new_attr)) {
       GST_WARNING ("Cannot set attribute a=%s:%s", attr->key, attr->value);
       return FALSE;
     }
     a = &new_attr;
-  }
-  else if (g_strcmp0 (attr->key, "connection") == 0) {
+  } else if (g_strcmp0 (attr->key, "connection") == 0) {
     /* TODO: Implment a mechanism that allows us to know if a */
     /* new connection is gonna be required or an existing one */
     /* can be used. By default we always create a new one. */
@@ -429,8 +427,7 @@ intersect_attribute (const GstSDPAttribute * attr,
       return FALSE;
     }
     a = &new_attr;
-  }
-  else if (sdp_utils_attribute_is_direction (attr, NULL)) {
+  } else if (sdp_utils_attribute_is_direction (attr, NULL)) {
     if (!sdp_utils_set_direction_answer (attr, &new_attr)) {
       GST_WARNING ("Cannot set 'direction' attribute");
       return FALSE;
@@ -632,7 +629,7 @@ sdp_utils_media_has_remb (const GstSDPMedia * media)
     }
 
     if (sdp_utils_rtcp_fb_attr_check_type (attr, payload,
-        SDP_MEDIA_RTCP_FB_GOOG_REMB)) {
+            SDP_MEDIA_RTCP_FB_GOOG_REMB)) {
       return TRUE;
     }
   }
@@ -659,7 +656,7 @@ sdp_utils_media_has_rtcp_nack (const GstSDPMedia * media)
     }
 
     if (sdp_utils_rtcp_fb_attr_check_type (attr, payload,
-        SDP_MEDIA_RTCP_FB_NACK)) {
+            SDP_MEDIA_RTCP_FB_NACK)) {
       return TRUE;
     }
   }

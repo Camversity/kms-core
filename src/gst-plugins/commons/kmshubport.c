@@ -26,14 +26,12 @@
 
 #define KEY_ELEM_DATA "kms-hub-elem-data"
 G_DEFINE_QUARK (KEY_ELEM_DATA, key_elem_data)
-
 #define KEY_TYPE_DATA "kms-hub-type-data"
-G_DEFINE_QUARK (KEY_TYPE_DATA, key_type_data)
-
+    G_DEFINE_QUARK (KEY_TYPE_DATA, key_type_data)
 #define KEY_PAD_DATA "kms-hub-pad-data"
-G_DEFINE_QUARK (KEY_PAD_DATA, key_pad_data)
+    G_DEFINE_QUARK (KEY_PAD_DATA, key_pad_data)
 
-GST_DEBUG_CATEGORY_STATIC (kms_hub_port_debug_category);
+    GST_DEBUG_CATEGORY_STATIC (kms_hub_port_debug_category);
 #define GST_CAT_DEFAULT kms_hub_port_debug_category
 
 #define KMS_HUB_PORT_GET_PRIVATE(obj) (         \
@@ -44,44 +42,44 @@ GST_DEBUG_CATEGORY_STATIC (kms_hub_port_debug_category);
   )                                             \
 )
 
-struct _KmsHubPortPrivate
-{
-  void *dummy;
-};
+     struct _KmsHubPortPrivate
+     {
+       void *dummy;
+     };
 
 /* Pad templates */
-static GstStaticPadTemplate hub_audio_sink_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_AUDIO_SINK_PAD,
+     static GstStaticPadTemplate hub_audio_sink_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_AUDIO_SINK_PAD,
     GST_PAD_SINK,
     GST_PAD_REQUEST,
     GST_STATIC_CAPS (KMS_AGNOSTIC_AUDIO_CAPS));
 
-static GstStaticPadTemplate hub_video_sink_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_VIDEO_SINK_PAD,
+     static GstStaticPadTemplate hub_video_sink_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_VIDEO_SINK_PAD,
     GST_PAD_SINK,
     GST_PAD_REQUEST,
     GST_STATIC_CAPS (KMS_AGNOSTIC_VIDEO_CAPS));
 
-static GstStaticPadTemplate hub_data_sink_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_DATA_SINK_PAD,
+     static GstStaticPadTemplate hub_data_sink_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_DATA_SINK_PAD,
     GST_PAD_SINK,
     GST_PAD_REQUEST,
     GST_STATIC_CAPS (KMS_AGNOSTIC_DATA_CAPS));
 
-static GstStaticPadTemplate hub_audio_src_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_AUDIO_SRC_PAD,
+     static GstStaticPadTemplate hub_audio_src_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_AUDIO_SRC_PAD,
     GST_PAD_SRC,
     GST_PAD_SOMETIMES,
     GST_STATIC_CAPS (KMS_AGNOSTIC_AUDIO_CAPS));
 
-static GstStaticPadTemplate hub_video_src_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_VIDEO_SRC_PAD,
+     static GstStaticPadTemplate hub_video_src_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_VIDEO_SRC_PAD,
     GST_PAD_SRC,
     GST_PAD_SOMETIMES,
     GST_STATIC_CAPS (KMS_AGNOSTIC_VIDEO_CAPS));
 
-static GstStaticPadTemplate hub_data_src_factory =
-GST_STATIC_PAD_TEMPLATE (HUB_DATA_SRC_PAD,
+     static GstStaticPadTemplate hub_data_src_factory =
+         GST_STATIC_PAD_TEMPLATE (HUB_DATA_SRC_PAD,
     GST_PAD_SRC,
     GST_PAD_SOMETIMES,
     GST_STATIC_CAPS (KMS_AGNOSTIC_DATA_CAPS));
@@ -93,8 +91,7 @@ G_DEFINE_TYPE_WITH_CODE (KmsHubPort, kms_hub_port,
     GST_DEBUG_CATEGORY_INIT (kms_hub_port_debug_category, PLUGIN_NAME,
         0, "debug category for hubport element"));
 
-static GstPad *
-kms_hub_port_generate_sink_pad (GstElement * element,
+     static GstPad *kms_hub_port_generate_sink_pad (GstElement * element,
     GstPadTemplate * templ, const gchar * name, const GstCaps * caps,
     GstElement * output)
 {
@@ -136,8 +133,7 @@ kms_hub_port_request_new_pad (GstElement * element,
     }
 
     output = kms_element_get_audio_agnosticbin (KMS_ELEMENT (element));
-  }
-  else if (templ ==
+  } else if (templ ==
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (G_OBJECT_GET_CLASS
               (element)), HUB_VIDEO_SINK_PAD)) {
     if (g_strcmp0 (name, HUB_VIDEO_SINK_PAD) != 0) {
@@ -147,8 +143,7 @@ kms_hub_port_request_new_pad (GstElement * element,
     }
 
     output = kms_element_get_video_agnosticbin (KMS_ELEMENT (element));
-  }
-  else if (templ ==
+  } else if (templ ==
       gst_element_class_get_pad_template (GST_ELEMENT_CLASS (G_OBJECT_GET_CLASS
               (element)), HUB_DATA_SINK_PAD)) {
     if (g_strcmp0 (name, HUB_DATA_SINK_PAD) != 0) {
@@ -181,6 +176,7 @@ kms_hub_port_internal_src_unhandled (KmsHubPort * self, GstPad * pad)
     // here will be NULL. Audio and video pads are mandatory, so the sink here
     // should not be NULL.
     GstCaps *caps = gst_pad_query_caps (pad, NULL);
+
     if (!kms_utils_caps_is_data (caps)) {
       GST_ERROR_OBJECT (self, "Derived class is missing links for some SRCs");
       g_return_if_fail (sink);
@@ -210,8 +206,7 @@ kms_hub_port_unhandled (KmsHubPort * self)
   kms_hub_port_internal_src_unhandled (self, audio_src);
   g_object_unref (audio_src);
 
-  data_src =
-      gst_element_get_static_pad (GST_ELEMENT (self), HUB_DATA_SRC_PAD);
+  data_src = gst_element_get_static_pad (GST_ELEMENT (self), HUB_DATA_SRC_PAD);
   kms_hub_port_internal_src_unhandled (self, data_src);
   g_object_unref (data_src);
 }

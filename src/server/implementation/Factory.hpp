@@ -42,8 +42,8 @@ public:
 
 protected:
   virtual MediaObjectImpl *createObjectPointer (
-      const boost::property_tree::ptree &conf,
-      const Json::Value &params) const = 0;
+    const boost::property_tree::ptree &conf,
+    const Json::Value &params) const = 0;
 };
 
 } /* kurento */

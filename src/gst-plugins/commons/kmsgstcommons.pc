@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/kurento
+
+Name: kmsgstcommons
+Description: Kurento plugins commons implementation
+Version: 7.0.0~11.gd5281780
+URL: https://github.com/Kurento/gst-kurento-plugins
+Requires: gstreamer-1.0 gstreamer-base-1.0 gstreamer-sdp-1.0 gstreamer-pbutils-1.0
+Requires.private: 
+Libs: -L${libdir} -lkmsgstcommons
+Libs.private: 
+CFlags: -I${includedir}

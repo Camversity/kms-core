@@ -1,0 +1,2 @@
+/usr/bin/ar qc libkmsrefstruct.a  CMakeFiles/kmsrefstruct.dir/kmsrefstruct.c.o
+/usr/bin/ranlib libkmsrefstruct.a

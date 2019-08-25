@@ -1,0 +1,14 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/kurento/modules/core
+
+Name: kmscore
+Description: Kurento core Module
+Version: 7.0.0-dev
+URL:
+Requires: gstreamer-1.0 gstreamer-sdp-1.0 libjsonrpc sigc++-2.0 glibmm-2.4
+Requires.private:
+Libs: -L${libdir} -lkmscoreimpl
+Libs.private:
+CFlags: -I${includedir}

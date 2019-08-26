@@ -8,9 +8,6 @@ Build-Depends: debhelper (>= 9),
  gstreamer1.0-plugins-base,
  gstreamer1.0-plugins-good,
  gstreamer1.0-plugins-ugly,
- kms-cmake-utils,
- kms-jsonrpc-dev,
- kurento-module-creator,
  libboost-filesystem-dev,
  libboost-system-dev,
  libboost-test-dev,
@@ -30,7 +27,7 @@ Architecture: any
 Section: libs
 Depends: ${shlibs:Depends}, ${misc:Depends},
  gstreamer1.0-plugins-base,
- kms-jsonrpc
+ kms-jsonrpc (>= 7)
 Description: Kurento Core module
  Kurento Core module - Binary libraries.
 

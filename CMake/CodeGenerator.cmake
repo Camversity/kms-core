@@ -663,6 +663,8 @@ function (generate_kurento_libraries)
 "
   )
 
+  message (STATUS "Depends for kms.json: ${MODEL_FILES}")
+
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${VALUE_NAME}.kmd.json
     COMMAND ${CMAKE_COMMAND} -P ${CMAKE_CURRENT_BINARY_DIR}/generate_kmd_include.cmake
